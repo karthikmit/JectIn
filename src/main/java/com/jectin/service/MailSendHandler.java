@@ -9,6 +9,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.util.Properties;
+import com.jectin.db.ApplicationProperties;
 
 public class MailSendHandler {
 
@@ -17,7 +18,6 @@ public class MailSendHandler {
     private final String senderId;
     private final String password;
     private static MailSendHandler handler;
-    private String directoryName = "/tmp";
 
     private MailSendHandler(String senderId, String password) {
         this.senderId = senderId;
@@ -27,9 +27,7 @@ public class MailSendHandler {
     public static MailSendHandler getMailSendHandler() {
 
         if(handler == null) {
-            String username = "ject.in.apps@gmail.com";
-            String password = "KA**11an";
-            handler = new MailSendHandler(username, password);
+            handler = new MailSendHandler(ApplicationProperties.MAILUSERNAME, ApplicationProperties.MAILPASSWORD);
         }
 
         return handler;
@@ -40,8 +38,8 @@ public class MailSendHandler {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.host", ApplicationProperties.SMTP_HOST);
+        props.put("mail.smtp.port", ApplicationProperties.SMTP_PORT);
 
         Session session = Session.getInstance(props,
                 new Authenticator() {
@@ -79,24 +77,6 @@ public class MailSendHandler {
     }
 
     private String getHelloMailSubject() {
-        return "Welcome to JectIn";
-    }
-
-    private String getResourcesFolder() {
-        String classpath = this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
-        File dir = new File(classpath);
-
-        if(dir.isDirectory()) {
-            File parentDirectory = dir.getParentFile();
-
-            if(parentDirectory.isDirectory()) {
-                String rootDir = parentDirectory.getParent();
-
-                System.out.println(rootDir);
-                return rootDir + "/resources";
-            }
-        }
-
-        return "";
+        return "Welcome to Ject-In";
     }
 }
